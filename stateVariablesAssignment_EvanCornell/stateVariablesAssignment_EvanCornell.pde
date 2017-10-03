@@ -3,10 +3,11 @@
 
 //Used startButton code from inclass demo 
 
+import ddf.minim.*; 
 
 //global variables
 //images
-PImage hotMenuPicA, hotMenuPicB;
+PImage hotMenuPicA, hotMenuPicB, gameBackground;
 float hotMenuPicAScale, hotMenuPicBScale;
 
 //startButton
@@ -32,12 +33,18 @@ float x, y;
 float dx, dy;
 boolean leftMotion, rightMotion, upwardMotion, downwardMotion; 
 
+//audio
+Minim minim; 
+AudioPlayer menuPlayer, gamePlayer, endPlayer;
+
 void setup () {
   size (800, 800);
   state = 0;
   comicSans = createFont("Comic Sans MS", 45);
   hotMenuPicA = loadImage("narutoMenuA.png");
   hotMenuPicB = loadImage("narutoMenuB.png");
+  gameBackground = loadImage("narutoGameBackground.jpg");
+  gameBackground.resize(width, height);
   menuxA = width/20;
   menuyA = height/3;
   menuxB = width/2;
@@ -62,6 +69,11 @@ void setup () {
   menuTextWidth = width/2.5;
   menuTextHeight = height/4;
   menuText = ("Start");
+
+  minim = new Minim (this);
+  menuPlayer = minim.loadFile("narutoMenu.mp3");
+  gamePlayer = minim.loadFile("narutoGame.mp3");
+  endPlayer = minim.loadFile("narutoEnd.mp3");
 }
 
 void draw () {
@@ -72,9 +84,13 @@ void chooseState () {
   if (state == 0) { //startScreen
     setRandoms();
     startScreen();
+    playMenuMusic();
     displayStartButton();
     displayMenuText();
   } else if (state == 1) {//game
+    stopMenuMusic();
+    loadGameBackground();
+    playGameMusic();
   }
 }
 
@@ -88,6 +104,19 @@ void startScreen() {
   background (rMenu, gMenu, bMenu);
   image(hotMenuPicA, menuxA, menuyA, hotMenuPicA.width*hotMenuPicAScale, hotMenuPicA.height*hotMenuPicAScale);
   image(hotMenuPicB, menuxB, menuyB, hotMenuPicB.width*hotMenuPicBScale, hotMenuPicB.height*hotMenuPicBScale);
+}
+
+void playMenuMusic() {
+  menuPlayer.setGain(20);
+  if (state == 0) {
+    menuPlayer.play();
+  }
+}
+
+void stopMenuMusic() {
+  if (state == 1 || state == 2) {
+    menuPlayer.pause();
+  }
 }
 
 boolean mouseOnButton() {
@@ -169,5 +198,22 @@ void moveCharacter () {
   }
   if (downwardMotion) {
     y += dy;
+  }
+}
+
+void loadGameBackground () {
+  background(gameBackground);
+}
+
+void playGameMusic() {
+  gamePlayer.setGain(20);
+  if (state == 1) {
+    gamePlayer.play();
+  }
+}
+
+void stopGameMusic() {
+  if (state == 2 || state == 0) {
+    gamePlayer.pause();
   }
 }
