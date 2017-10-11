@@ -7,8 +7,8 @@ import ddf.minim.*;
 
 //global variables
 //images
-PImage hotMenuPicA, hotMenuPicB, gameBackground;
-float hotMenuPicAScale, hotMenuPicBScale;
+PImage hotMenuPicA, hotMenuPicB, gameBackground, playableSauceyke;
+float hotMenuPicAScale, hotMenuPicBScale, playableSauceykeScale;
 
 //startButton
 float startButtonX, startButtonY, startButtonWidth, startButtonHeight;
@@ -29,8 +29,8 @@ float menuxA, menuyA, menuxB, menuyB;
 float menuTextWidth, menuTextHeight;
 
 //motion
-float x, y;
-float dx, dy;
+float characterX, characterY;
+float characterDX, characterDY;
 boolean leftMotion, rightMotion, upwardMotion, downwardMotion; 
 
 //audio
@@ -44,6 +44,7 @@ void setup () {
   hotMenuPicA = loadImage("narutoMenuA.png");
   hotMenuPicB = loadImage("narutoMenuB.png");
   gameBackground = loadImage("narutoGameBackground.jpg");
+  playableSauceyke = loadImage("sauceykeGameCharacter.png");
   gameBackground.resize(width, height);
   menuxA = width/20;
   menuyA = height/3;
@@ -51,6 +52,21 @@ void setup () {
   menuyB = height/2;
   hotMenuPicAScale = 1.4;
   hotMenuPicBScale = 3;
+  playableSauceykeScale = 0.3;
+
+  //sets starting position for character
+  characterX = width/2;
+  characterY = height/2;
+
+  //sets the speed for the character
+  characterDX = 6;
+  characterDY = 6;
+
+  //all booleans are false for motion, they change when movement is implimented later on
+  leftMotion = false;
+  rightMotion = false;
+  upwardMotion = false;
+  downwardMotion = false;
 
 
   //startButton screen position
@@ -91,6 +107,8 @@ void chooseState () {
     stopMenuMusic();
     loadGameBackground();
     playGameMusic();
+    moveCharacter();
+    displayCharacter();
   }
 }
 
@@ -188,16 +206,28 @@ void keyReleased () {
 void moveCharacter () {
   //each if statement states if that boolean == true then set the x or y to the earlier mentioned movement speed, creates character motion 
   if (rightMotion) {
-    x += dx;
+    characterX += characterDX;
   }
   if (leftMotion) {
-    x -= dx;
+    characterX -= characterDX;
   }
   if (upwardMotion) {
-    y -= dy;
+    characterY -= characterDY;
   }
   if (downwardMotion) {
-    y += dy;
+    characterY += characterDY;
+  }
+  if (characterX > width) {
+   characterX = width;
+  }
+  if (characterY > height) {
+    characterY = height;
+  }
+  if (characterX < 0) {
+    characterX = 0;
+  }
+  if (characterY < 0) {
+    characterY = 0;
   }
 }
 
@@ -216,4 +246,9 @@ void stopGameMusic() {
   if (state == 2 || state == 0) {
     gamePlayer.pause();
   }
+}
+
+void displayCharacter() {
+  imageMode(CENTER);
+  image (playableSauceyke, characterX, characterY, playableSauceyke.width*playableSauceykeScale, playableSauceyke.height*playableSauceykeScale);
 }
