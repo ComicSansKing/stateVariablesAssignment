@@ -3,6 +3,19 @@
 
 //Used startButton code from inclass demo 
 
+//I deserve full marks for:
+//interactive
+//aesthetically pleasing ;)
+//uses a state variable to switch between menu and game, as well as end screen. The end screen currently has no function but will be built upon in next iteration
+
+//I deserve extra for experts for:
+//PIamge used throughout as well as music and music timing.
+//the use of states to call functions in an if/else loop
+//character movement boundaries 
+//lots of hard work
+
+//Not all functions have a purpose yet, and the game is not finished. Hoping to build upon it for the next project.
+
 import ddf.minim.*; 
 
 //global variables
@@ -43,7 +56,7 @@ AudioPlayer menuPlayer, gamePlayer, endPlayer;
 void setup () {
   //declares screen size and sets state to 0 which will change as the game goes on
   size (800, 800);
-  state = 2;
+  state = 0;
   
   //loads all images and creates the Comic Sans font used throughout ;)
   comicSans = createFont("Comic Sans MS", 45);
@@ -169,7 +182,7 @@ void chooseState () {
   }
 
   void stopMenuMusic() {
-    if (state == 1 || state == 2) {
+    if (state != 0) {
       //if the state is not 0 then the first song is paused
       menuPlayer.pause();
     }
@@ -291,7 +304,7 @@ void chooseState () {
 
   void stopGameMusic() {
     //if the state is not 1 pause the music
-    if (state == 2 || state == 0) {
+    if (state != 1) {
       gamePlayer.pause();
     }
   }
